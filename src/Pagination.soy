@@ -1,0 +1,53 @@
+{namespace Pagination}
+
+/**
+ * This renders the main element.
+ * @param offset
+ * @param? elementClasses
+ * @param circular
+ * @param page
+ * @param strings
+ * @param showControls
+ * @param total
+ */
+{template .render}
+	<div class="pagination{$elementClasses ? ' ' + $elementClasses : ''}">
+		<ul class="pagination pagination-content">
+			{if $showControls == true}
+				{let $prevClasses: 'pagination-control' + (not $circular and $page == 0 ? ' disabled' : '') /}
+				{call .renderElement_}
+					{param cssClass: $prevClasses /}
+					{param content: $strings.prev /}
+					{param onClick: 'onClickControls' /}
+				{/call}
+			{/if}
+			
+			{for $i in range($total)}		
+				{let $itemClasses: 'pagination-item' + ($page == $i ? ' active' : '') /}
+				{call .renderElement_}
+					{param cssClass: $itemClasses /}
+					{param content: $offset + $i + 1 /}
+					{param onClick: 'onClickItem' /}
+				{/call}	
+			{/for}
+
+			{if $showControls == true}
+				{let $nextClasses: 'pagination-control' + (not $circular and $page == $total - 1 ? ' disabled' : '') /}
+				{call .renderElement_}
+					{param cssClass: $nextClasses /}
+					{param content: $strings.next /}
+					{param onClick: 'onClickControls' /}
+				{/call}
+			{/if}
+		</ul>
+	</div>
+{/template}
+
+/**
+ * @param cssClass
+ * @param content
+ * @param onClick
+ */
+{template .renderElement_}
+	<li class="{$cssClass ? $cssClass : ''}" data-onclick="{$onClick}"><a href="#">{$content}</a></li>
+{/template}
